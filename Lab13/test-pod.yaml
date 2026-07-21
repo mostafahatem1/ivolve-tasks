@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logs-test-pod
+  namespace: ivolve
+spec:
+  containers:
+    - name: logs-writer
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          echo "Application log created from Kubernetes Pod" > /app/logs/access.log
+          sleep 3600
+      volumeMounts:
+        - name: app-logs
+          mountPath: /app/logs
+  volumes:
+    - name: app-logs
+      persistentVolumeClaim:
+        claimName: app-logs-pvc
